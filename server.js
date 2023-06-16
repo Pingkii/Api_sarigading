@@ -1,9 +1,11 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const app = express();
+const cors = require('cors')
 
 //parse application
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(cors())
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 
@@ -11,6 +13,6 @@ app.use(bodyParser.json());
 var route = require('./router');
 route(app);
 
-app.listen(3000, () => {
-    console.log('server started on port');
+app.listen(8000, () => {
+    console.log('server started on port 8000');
 });

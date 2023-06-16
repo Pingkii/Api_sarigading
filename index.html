@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Add Menu Item</title>
+  </head>
+  <body>
+    <h1>Add Menu Item</h1>
+    <form
+      action="http://localhost:3000/tambah"
+      method="POST"
+      enctype="multipart/form-data"
+    >
+      <label for="id_menu">Menu ID:</label>
+      <input type="text" id="id_menu" name="id_menu" required /><br /><br />
+
+      <label for="nama_menu">Menu Name:</label>
+      <input type="text" id="nama_menu" name="nama_menu" required /><br /><br />
+
+      <label for="harga">Price:</label>
+      <input type="text" id="harga" name="harga" required /><br /><br />
+
+      <label for="stok">Stock:</label>
+      <input type="text" id="stok" name="stok" required /><br /><br />
+
+      <label for="gambar">Image:</label>
+      <input type="file" id="gambar" name="gambar" required /><br /><br />
+
+      <input type="submit" value="Add Menu Item" />
+    </form>
+  </body>
+</html>
