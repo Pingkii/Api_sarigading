@@ -73,19 +73,36 @@ exports.ubahmenu = function (req, res) {
     var nama_menu = req.body.nama_menu;
     var harga = req.body.harga;
     var stok = req.body.stok;
-    var gambar = req.file.gambar;
-
-    const imagebuffer = Buffer.from(gambar,'base64');
-
-    connection.query('UPDATE menu SET nama_menu=?, harga=?, stok=?, gambar=? WHERE id_menu=?', [nama_menu, harga, stok, imagebuffer,id_menu],
+  
+    if (req.file) {
+      const imageBuffer = fs.readFileSync(req.file.path);
+  
+      connection.query(
+        'UPDATE menu SET nama_menu=?, harga=?, stok=?, gambar=? WHERE id_menu=?',
+        [nama_menu, harga, stok, imageBuffer, id_menu],
         function (error, rows, fields) {
-            if (error) {
-                console.log(error);
-            } else {
-                response.ok("Berhasil Ubah Data", res)
-            }
-        });
-}
+          if (error) {
+            console.log(error);
+          } else {
+            response.ok('Berhasil mengubah Menu!', res);
+          }
+        }
+      );
+    } else {
+      connection.query(
+        'UPDATE menu SET nama_menu=?, harga=?, stok=? WHERE id_menu=?',
+        [nama_menu, harga, stok, id_menu],
+        function (error, rows, fields) {
+          if (error) {
+            console.log(error);
+          } else {
+            response.ok('Berhasil mengubah Menu!', res);
+          }
+        }
+      );
+    }
+  };
+  
 
 //menghapus data pada database
 exports.hapusmenu = function (req, res) {
