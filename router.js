@@ -9,6 +9,9 @@ module.exports = function(app){
     app.route('/tampil')
         .get(jsonku.tampilmenu);
 
+    app.route('/tampil/:id_menu')
+        .get(jsonku.tampilid);
+
     app.route('/tambah')
         .post(jsonku.tambahmenu);
 

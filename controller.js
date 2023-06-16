@@ -3,9 +3,26 @@
 var response = require('./res');
 var connection = require('./koneksi');
 const conn = require('./koneksi');
+const fs = require('fs');
+const multer = require('multer');
+const upload = multer({ dest: './public' });
 
 exports.index = function(req,res){
     response.ok("aplikasi REST API berjalan",res)
+};
+
+
+//menampilkan data per id
+exports.tampilid = function (req, res) {
+    let id_menu = req.params.id_menu;
+    connection.query('SELECT * FROM menu WHERE id_menu = ?', [id_menu],
+        function (error, rows, fields) {
+            if (error) {
+                console.log(error);
+            } else {
+                response.ok(rows, res);
+            }
+        });
 };
 
 
@@ -18,30 +35,37 @@ exports.tampilmenu = function(req, res){
             response.ok(rows, res)
         }
     });
-}; 
+} 
 
 //menambahkan data pada database
 exports.tambahmenu = function (req, res) {
-    var id_menu = req.body.id_menu;
-    var nama_menu = req.body.nama_menu;
-    var harga = req.body.harga;
-    var stok = req.body.stok;
-    var gambar = req.body.gambar;
-
-    const imagebuffer = Buffer.from(gambar,'base64');
-
-
-
-    connection.query('INSERT INTO menu (id_menu,nama_menu,harga,stok,gambar) VALUES(?,?,?,?,?)',
-        [id_menu, nama_menu, harga, stok, imagebuffer],
+    upload.single('gambar')(req, res, function (err) {
+      if (err) {
+        console.log(err);
+        return response.error('Terjadi kesalahan dalam mengunggah gambar', res);
+      }
+  
+      var id_menu = req.body.id_menu;
+      var nama_menu = req.body.nama_menu;
+      var harga = req.body.harga;
+      var stok = req.body.stok;
+  
+      const imageBuffer = fs.readFileSync(req.file.path);
+  
+      // Lanjutkan proses penambahan menu ke database
+      connection.query(
+        'INSERT INTO menu (id_menu, nama_menu, harga, stok, gambar) VALUES (?, ?, ?, ?, ?)',
+        [id_menu, nama_menu, harga, stok, imageBuffer],
         function (error, rows, fields) {
-            if (error) {
-                console.log(error);
-            } else {
-                response.ok("Berhasil Menambahkan Data!", res)
-            }
-        });
-};
+          if (error) {
+            console.log(error);
+          } else {
+            response.ok('Berhasil Menambahkan Data!', res);
+          }
+        }
+      );
+    });
+  };
 
 //
 exports.ubahmenu = function (req, res) {
